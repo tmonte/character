@@ -12,9 +12,9 @@ namespace Character
 		
 		// State machines that handle state changes
 		HorizontalStateFactory _horizontalStateFactory;
-	    VerticalSM _verticalSM;
-	    EquipmentSM _equipmentSM;
-	    SpeedSM _speedSM;
+	    VerticalStateFactory _verticalStateFactory;
+	    EquipmentStateFactory _equipmentStateFactory;
+	    SpeedStateFactory _speedStateFactory;
 		
 		// Current character states
 	    HorizontalState _horizontalState;
@@ -26,16 +26,16 @@ namespace Character
 	    (
 		    CharacterHooks hooks,
 		    HorizontalStateFactory horizontalStateFactory,
-		    VerticalSM verticalSM,
-		    EquipmentSM equipmentSM,
-		    SpeedSM speedSM
+		    VerticalStateFactory verticalStateFactory,
+		    EquipmentStateFactory equipmentStateFactory,
+		    SpeedStateFactory speedStateFactory
 	    )
         {
 	        _hooks = hooks;
 	        _horizontalStateFactory = horizontalStateFactory;
-	        _verticalSM = verticalSM;
-	        _equipmentSM = equipmentSM;
-	        _speedSM = speedSM;
+	        _verticalStateFactory = verticalStateFactory;
+	        _equipmentStateFactory = equipmentStateFactory;
+	        _speedStateFactory = speedStateFactory;
         }
 	    
 	    public CapsuleCollider CapsuleCollider
@@ -104,14 +104,34 @@ namespace Character
 	    
 	    public void Initialize()
 	    {
-	    	// Set the character states to his
-	    	// state machines initial states
-	    	
-	    	_horizontalState = _horizontalStateFactory.Create();
-	    	_verticalState = _verticalSM.State;
-	    	_equipmentState = _equipmentSM.State;
-	    	_speedState = _speedSM.State;
+            UpdateState();
 	    }
+
+        /// <summary>
+        /// Sets the character states to his state machines
+        /// current state
+        /// </summary>
+        public void UpdateState()
+        {
+            _horizontalState = _horizontalStateFactory.Create(this);
+            _verticalState = _verticalStateFactory.Create(this);
+            _equipmentState = _equipmentStateFactory.Create(this);
+            _speedState = _speedStateFactory.Create(this);
+        }
+
+        public void ChangeState(Trigger trigger)
+        {
+            if (_horizontalStateFactory.CanFire(trigger))
+                _horizontalStateFactory.Fire(trigger);
+            if (_verticalStateFactory.CanFire(trigger))
+                _verticalStateFactory.Fire(trigger);
+            if (_equipmentStateFactory.CanFire(trigger))
+                _equipmentStateFactory.Fire(trigger);
+            if (_speedStateFactory.CanFire(trigger))
+                _speedStateFactory.Fire(trigger);
+
+            UpdateState();
+        }
     }
 }
 

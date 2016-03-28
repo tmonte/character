@@ -14,33 +14,37 @@
 	
     {
         [SerializeField]
-        Settings Settings = null;
+	    Settings _settings = null;
 
         public override void InstallBindings()
 	    {
-	    	Container.Bind<Camera>("Main").ToSingleInstance(Settings.MainCamera);
+	    	Container.Bind<Camera>("Main").ToSingleInstance(_settings.MainCamera);
 		    
-		    // Character hooks to access unity specific props
-		    Container.Bind<CharacterHooks>()
-			    .ToTransientPrefab<CharacterHooks>(Settings.Character.Prefab)
+            // Character State Factories
+		    Container.Bind<HorizontalStateFactory>().ToSingle();
+            Container.Bind<VerticalStateFactory>().ToSingle();
+            Container.Bind<EquipmentStateFactory>().ToSingle();
+            Container.Bind<SpeedStateFactory>().ToSingle();
+
+            // Character hooks to access unity props
+            Container.Bind<CharacterHooks>()
+			    .ToTransientPrefab<CharacterHooks>(_settings.Character.Prefab)
 			    .WhenInjectedInto<Character>();
 		    
-		    // State machines necessary for the character state
-		    //Container.Bind<HorizontalSM>().ToSingle();
-		    //Container.Bind<VerticalSM>().ToSingle();
-		    //Container.Bind<SpeedSM>().ToSingle();
-		    //Container.Bind<EquipmentSM>().ToSingle();
-		    Container.Bind<CharacterState>().ToSingle();
-		    
-		    // Character object
+            // Character
 		    Container.Bind<Character>().ToSingle();
+		    Container.Bind<ITickable>().ToSingle<Character>();
+		    Container.Bind<IInitializable>().ToSingle<Character>();
 		    
-		    // Character behaviors
-		    //Container.Bind<HorizontalBehavior>().ToSingle();		    
-		    //Container.Bind<IFixedTickable>().ToSingle<HorizontalBehavior>();
+            // Character States Settings
+		    Container.Bind<CharacterStateIdle.Settings>()
+			    .ToSingleInstance(_settings.Character.StateIdle);
+		    Container.Bind<CharacterStateMoving.Settings>()
+			    .ToSingleInstance(_settings.Character.StateMoving);
+
+            Container.Bind<InputHandler>().ToSingle();
+            Container.Bind<ITickable>().ToSingle<InputHandler>();
 		    
-		    Container.Bind<InputHandler>().ToSingle();
-		    Container.Bind<ITickable>().ToSingle<InputHandler>();
         }
     }
 
@@ -52,7 +56,9 @@
 
         [Serializable]
         public class CharacterSettings
-        {
+	    {
+		    public CharacterStateMoving.Settings StateMoving;
+		    public CharacterStateIdle.Settings StateIdle;
             public GameObject Prefab;
         }
     }
