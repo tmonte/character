@@ -1,0 +1,13 @@
+﻿using UnityEngine;
+using System.Collections;
+
+namespace Character
+{
+	public class EquipmentState 
+	{
+		public void Update()
+		{
+			
+		}
+	}
+}
