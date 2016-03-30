@@ -17,7 +17,10 @@ namespace Character
 
         public override void Update()
         {
-            //Debug.Log("Character is STANDING");
+            if(Input.GetButtonDown("Jump"))
+            {
+                _character.ChangeState(Trigger.JumpPress);
+            }
         }
     }
 }

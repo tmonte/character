@@ -37,11 +37,11 @@ namespace Character
             if (hasH || hasV)
                 _character.ChangeState(Trigger.MovePress);
 
-            UpdateAnimator(Vector3.zero);
+            UpdateAnimator();
 
         }
 
-        void UpdateAnimator(Vector3 move)
+        void UpdateAnimator()
         {
             _character.Animator.SetFloat("Forward", 0, 0.1f, Time.deltaTime);
             _character.Animator.SetFloat("Turn", 0, 0.1f, Time.deltaTime);
