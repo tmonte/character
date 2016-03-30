@@ -19,6 +19,8 @@ namespace Character
 		}
 		
 		public abstract void Update();
+
+        public abstract void FixedUpdate();
 		
 		public virtual void Start()
 		{

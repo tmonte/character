@@ -5,55 +5,61 @@ using Stateless;
 
 namespace Character
 {
-	public class Character : ITickable, IInitializable
-	{
-		// Hooks to get Monobehaviour props
-	    CharacterHooks _hooks;
+    public class Character : ITickable, IFixedTickable, IInitializable
+    {
+        // Hooks to get Monobehaviour props
+        CharacterHooks _hooks;
 		
-		// State machines that handle state changes
-		HorizontalStateFactory _horizontalStateFactory;
-	    VerticalStateFactory _verticalStateFactory;
-	    EquipmentStateFactory _equipmentStateFactory;
-	    SpeedStateFactory _speedStateFactory;
+        // State machines that handle state changes
+        public HorizontalStateFactory _horizontalStateFactory;
+        public VerticalStateFactory _verticalStateFactory;
+        public EquipmentStateFactory _equipmentStateFactory;
+        public SpeedStateFactory _speedStateFactory;
 		
-		// Current character states
-	    HorizontalState _horizontalState;
-	    VerticalState _verticalState;
-	    EquipmentState _equipmentState;
-	    SpeedState _speedState;
+        // Current character states
+        HorizontalState _horizontalState;
+        VerticalState _verticalState;
+        EquipmentState _equipmentState;
+        SpeedState _speedState;
 
-	    public Character
+        public Character
 	    (
-		    CharacterHooks hooks,
-		    HorizontalStateFactory horizontalStateFactory,
-		    VerticalStateFactory verticalStateFactory,
-		    EquipmentStateFactory equipmentStateFactory,
-		    SpeedStateFactory speedStateFactory
-	    )
+            CharacterHooks hooks,
+            HorizontalStateFactory horizontalStateFactory,
+            VerticalStateFactory verticalStateFactory,
+            EquipmentStateFactory equipmentStateFactory,
+            SpeedStateFactory speedStateFactory
+        )
         {
-	        _hooks = hooks;
-	        _horizontalStateFactory = horizontalStateFactory;
-	        _verticalStateFactory = verticalStateFactory;
-	        _equipmentStateFactory = equipmentStateFactory;
-	        _speedStateFactory = speedStateFactory;
+            _hooks = hooks;
+            _horizontalStateFactory = horizontalStateFactory;
+            _verticalStateFactory = verticalStateFactory;
+            _equipmentStateFactory = equipmentStateFactory;
+            _speedStateFactory = speedStateFactory;
+            Rigidbody.constraints = 
+                RigidbodyConstraints.FreezeRotationX | 
+                RigidbodyConstraints.FreezeRotationY | 
+                RigidbodyConstraints.FreezeRotationZ;
         }
-	    
-	    public CapsuleCollider CapsuleCollider
-	    {
-	    	get 
-	    	{
-	    		return _hooks.GetComponent<CapsuleCollider>();
-	    	}
-	    }
-	    
-	    public Animator Animator {
-		    get
-		    {
-		    	return _hooks.GetComponent<Animator>();
-		    }
-	    }
 
-        public Rigidbody Rigidbody {
+        public CapsuleCollider CapsuleCollider
+        {
+            get
+            {
+                return _hooks.GetComponent<CapsuleCollider>();
+            }
+        }
+
+        public Animator Animator
+        {
+            get
+            {
+                return _hooks.GetComponent<Animator>();
+            }
+        }
+
+        public Rigidbody Rigidbody
+        {
             get
             {
                 return _hooks.GetComponent<Rigidbody>();
@@ -91,21 +97,30 @@ namespace Character
                 return _hooks.transform;
             }
         }
-	    
-	    public void Tick()
-	    {
-	    	// Delegates the update to each state
+
+        public void Tick()
+        {
+            // Delegates the update to each state
 	    	
-	    	_horizontalState.Update();
-	    	_verticalState.Update();
-	    	_equipmentState.Update();
-	    	_speedState.Update();
-	    }
-	    
-	    public void Initialize()
-	    {
+            _horizontalState.Update();
+            _verticalState.Update();
+            _equipmentState.Update();
+            _speedState.Update();
+        }
+
+        public void FixedTick()
+        {
+            // Delegates the fixed update to each state
+
+            _horizontalState.FixedUpdate();
+        }
+
+        public void Initialize()
+        {
+            // Initialize all state machines
+
             UpdateState();
-	    }
+        }
 
         /// <summary>
         /// Sets the character states to his state machines
@@ -119,6 +134,10 @@ namespace Character
             _speedState = _speedStateFactory.Create(this);
         }
 
+        /// <summary>
+        /// Changes the the character based on a trigger
+        /// </summary>
+        /// <param name="trigger">A trigger, or input command</param>
         public void ChangeState(Trigger trigger)
         {
             if (_horizontalStateFactory.CanFire(trigger))
@@ -131,6 +150,11 @@ namespace Character
                 _speedStateFactory.Fire(trigger);
 
             UpdateState();
+        }
+
+        public bool IsInState(SpeedStates state)
+        {
+            return _speedStateFactory.IsInState(state);
         }
     }
 }

@@ -8,7 +8,7 @@
 
     public abstract class SpeedState
     {
-        Character _character;
+        protected Character _character;
 
         public SpeedState(Character character)
         {

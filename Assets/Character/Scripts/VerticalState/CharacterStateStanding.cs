@@ -17,6 +17,7 @@ namespace Character
 
         public override void Update()
         {
+            //Debug.Log("Character is STANDING");
         }
     }
 }

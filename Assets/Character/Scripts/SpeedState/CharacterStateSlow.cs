@@ -1,4 +1,6 @@
-﻿namespace Character
+﻿using UnityEngine;
+
+namespace Character
 {
     class CharacterStateSlow : SpeedState
     {
@@ -8,6 +10,11 @@
         { }
 
         public override void Update()
-        { }
+        {
+            if(Input.GetKey(KeyCode.Tab))
+            {
+                _character.ChangeState(Trigger.SpeedToggle);
+            }
+        }
     }
 }

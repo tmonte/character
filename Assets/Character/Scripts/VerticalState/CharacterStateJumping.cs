@@ -1,4 +1,6 @@
-﻿namespace Character
+﻿using UnityEngine;
+
+namespace Character
 {
     class CharacterStateJumping : VerticalState
     {
@@ -9,6 +11,7 @@
 
         public override void Update()
         {
+            Debug.Log("Character is JUMPING");
         }
     }
 }

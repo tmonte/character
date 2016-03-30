@@ -34,6 +34,7 @@
             // Character
 		    Container.Bind<Character>().ToSingle();
 		    Container.Bind<ITickable>().ToSingle<Character>();
+            Container.Bind<IFixedTickable>().ToSingle<Character>();
 		    Container.Bind<IInitializable>().ToSingle<Character>();
 		    
             // Character States Settings
@@ -41,10 +42,6 @@
 			    .ToSingleInstance(_settings.Character.StateIdle);
 		    Container.Bind<CharacterStateMoving.Settings>()
 			    .ToSingleInstance(_settings.Character.StateMoving);
-
-            Container.Bind<InputHandler>().ToSingle();
-            Container.Bind<ITickable>().ToSingle<InputHandler>();
-		    
         }
     }
 

@@ -1,4 +1,6 @@
-﻿namespace Character
+﻿using UnityEngine;
+
+namespace Character
 {
     class CharacterStateDucking : VerticalState
     {
@@ -9,6 +11,7 @@
 
         public override void Update()
         {
+            Debug.Log("Character is Ducking");
         }
     }
 }

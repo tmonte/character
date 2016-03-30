@@ -16,12 +16,10 @@
             _container = container;
 
             Configure(SpeedStates.Slow)
-                .Permit(Trigger.SpeedToggle, SpeedStates.Fast)
-                .Permit(Trigger.SpeedPress, SpeedStates.Fast);
+                .Permit(Trigger.SpeedToggle, SpeedStates.Fast);
 
             Configure(SpeedStates.Fast)
-                .Permit(Trigger.SpeedToggle, SpeedStates.Slow)
-                .Permit(Trigger.SpeedRelease, SpeedStates.Slow);
+                .Permit(Trigger.SpeedToggle, SpeedStates.Slow);
         }
 
         public SpeedState Create(params object[] constructorArgs)
