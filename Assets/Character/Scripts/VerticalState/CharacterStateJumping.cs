@@ -60,9 +60,14 @@ namespace Character
         void UpdateAnimator(bool jump)
         {
             if (jump)
+            {
                 _character.Animator.SetFloat("Jump", _character.Rigidbody.velocity.y);
+                _character.Animator.SetBool("OnGround", false);
+            }
             else
+            {
                 _character.Animator.SetFloat("Jump", 0);
+            }
         }
     }
 }
