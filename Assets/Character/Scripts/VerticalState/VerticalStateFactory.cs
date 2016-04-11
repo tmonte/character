@@ -1,9 +1,10 @@
-﻿namespace Character
-{
-    using System;
-    using Stateless;
-    using Zenject;
+﻿using System;
+using Stateless;
+using Zenject;
+using UnityEngine;
 
+namespace Character
+{
     /// <summary>
     /// Character stealth state.
     /// </summary>
@@ -16,14 +17,17 @@
             _container = container;
 
             Configure(VerticalStates.Standing)
+				.OnEntry(() => Debug.Log("STANDING"))
                 .Permit(Trigger.DuckToggle, VerticalStates.Ducking)
                 .Permit(Trigger.JumpPress, VerticalStates.Jumping);
 
             Configure(VerticalStates.Jumping)
+				.OnEntry(() => Debug.Log("JUMPING"))
                 .SubstateOf(VerticalStates.Standing)
                 .Permit(Trigger.JumpRelease, VerticalStates.Standing);
 
             Configure(VerticalStates.Ducking)
+				.OnEntry(() => Debug.Log("DUCKING"))
                 .Permit(Trigger.DuckToggle, VerticalStates.Standing);
         }
 

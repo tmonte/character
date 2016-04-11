@@ -156,6 +156,11 @@ namespace Character
         {
             return _speedStateFactory.IsInState(state);
         }
+
+        public bool IsInState(VerticalStates state)
+        {
+            return _verticalStateFactory.IsInState(state);
+        }
     }
 }
 

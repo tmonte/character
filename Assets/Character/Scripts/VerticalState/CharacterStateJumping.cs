@@ -6,6 +6,8 @@ namespace Character
     {
         [SerializeField]
         float _jumpPower = 12f;
+		[SerializeField] 
+		float GroundCheckDistance = 0.1f;
 
         [Range(1f, 4f)]
         [SerializeField]
@@ -14,6 +16,8 @@ namespace Character
         [SerializeField]
         float _groundCheckDistance = 0.1f;
         float _originalGroundCheckDistance;
+		Vector3 _groundNormal;
+		bool _isGrounded;
 
         bool _isJumping;
 
@@ -22,52 +26,44 @@ namespace Character
         ) : base(character)
         {
             _originalGroundCheckDistance = _groundCheckDistance;
+			_character.Animator.applyRootMotion = true;
+			_character.Rigidbody.velocity = new Vector3(
+				_character.Rigidbody.velocity.x,
+				_jumpPower,
+				_character.Rigidbody.velocity.z);
+			_character.Animator.applyRootMotion = false;
+			_groundCheckDistance = 0.1f;
+			_character.Animator.SetFloat("Jump", _character.Rigidbody.velocity.y);
+			_character.Animator.SetBool("OnGround", false);
         }
 
         public override void Update()
         {
-            if (!_isJumping)
-            {
-                Jump();
-                UpdateAnimator(true);
-            }
-            else
-            {
-                Fall();
-                UpdateAnimator(false);
-            }
-        }
-
-        void Jump()
-        {
-            _character.Rigidbody.velocity = new Vector3(
-                _character.Rigidbody.velocity.x,
-                _jumpPower,
-                _character.Rigidbody.velocity.z);
-            _character.Animator.applyRootMotion = false;
-            _isJumping = true;
-            _groundCheckDistance = 0.1f;
-        }
-
-        void Fall()
-        {
-            Vector3 extraGravityForce = (Physics.gravity * _gravityMultiplier) - Physics.gravity;
-            _character.Rigidbody.AddForce(extraGravityForce);
-            _groundCheckDistance = _character.Rigidbody.velocity.y < 0 ? _originalGroundCheckDistance : 0.01f;
-            _character.ChangeState(Trigger.JumpRelease);
-        }
-
-        void UpdateAnimator(bool jump)
-        {
-            if (jump)
-            {
-                _character.Animator.SetFloat("Jump", _character.Rigidbody.velocity.y);
-                _character.Animator.SetBool("OnGround", false);
-            }
-            else
-            {
-                _character.Animator.SetFloat("Jump", 0);
-            }
+			RaycastHit hitInfo;
+			#if UNITY_EDITOR
+			Debug.DrawLine(
+				_character.Transform.position + (Vector3.up * 0.1f), 
+				_character.Transform.position + (Vector3.up * 0.1f) +
+				(Vector3.down * GroundCheckDistance));
+			#endif
+			if (Physics.Raycast(
+				_character.Transform.position +
+				(Vector3.up * 0.1f), 
+				Vector3.down, 
+				out hitInfo, 
+				GroundCheckDistance))
+			{
+				_character.Animator.SetFloat("Jump", 0f);
+				_character.Animator.SetBool("OnGround", true);
+				_character.Animator.applyRootMotion = true;
+				_character.ChangeState(Trigger.JumpRelease);
+			}
+			else
+			{
+				Vector3 extraGravityForce = (Physics.gravity * _gravityMultiplier) - Physics.gravity;
+				_character.Rigidbody.AddForce(extraGravityForce);
+				_groundCheckDistance = _character.Rigidbody.velocity.y < 0 ? _originalGroundCheckDistance : 0.01f;
+			}	
         }
     }
 }

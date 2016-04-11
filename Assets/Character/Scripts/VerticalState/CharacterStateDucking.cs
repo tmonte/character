@@ -12,6 +12,10 @@ namespace Character
         public override void Update()
         {
             Debug.Log("Character is Ducking");
+            if (Input.GetKey("c"))
+            {
+                _character.ChangeState(Trigger.DuckToggle);
+            }
         }
     }
 }

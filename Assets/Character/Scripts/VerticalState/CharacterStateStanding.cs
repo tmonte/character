@@ -21,6 +21,10 @@ namespace Character
             {
                 _character.ChangeState(Trigger.JumpPress);
             }
+            if (Input.GetKey("c"))
+            {
+                _character.ChangeState(Trigger.DuckToggle);
+            }
         }
     }
 }

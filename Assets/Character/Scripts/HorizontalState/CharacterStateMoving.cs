@@ -7,7 +7,6 @@ namespace Character
 {
     public class CharacterStateMoving : HorizontalState
     {
-        [SerializeField] float GroundCheckDistance = 0.1f;
         [SerializeField] float MovingTurnSpeed = 360;
         [SerializeField] float StationaryTurnSpeed = 180;
         [Range(1f, 4f)][SerializeField] float GravityMultiplier = 2f;
@@ -17,10 +16,10 @@ namespace Character
         Settings _settings;
         Camera _camera;
         const float _movementThreshold = 0.00001f;
-        bool _isGrounded;
+        
         float _turnAmount;
         float _forwardAmount;
-        Vector3 _groundNormal;
+        
 
         public CharacterStateMoving(
             Settings settings,
@@ -62,7 +61,10 @@ namespace Character
             if (_character.IsInState(SpeedStates.Fast))
                 move *= 0.5f;
             #endif
-            Move(move);
+            if(!_character.IsInState(VerticalStates.Jumping))
+            {
+                Move(move);
+            }
 
         }
 
@@ -71,8 +73,7 @@ namespace Character
             if (move.magnitude > 1f)
                 move.Normalize();
             move = _character.Transform.InverseTransformDirection(move);
-            CheckGroundStatus();
-            move = Vector3.ProjectOnPlane(move, _groundNormal);
+			move = Vector3.ProjectOnPlane(move, Vector3.up);
             _turnAmount = Mathf.Atan2(move.x, move.z);
             _forwardAmount = move.z;
             ApplyExtraTurnRotation();
@@ -83,8 +84,7 @@ namespace Character
         {
             _character.Animator.SetFloat("Forward", _forwardAmount, 0.1f, Time.deltaTime);
             _character.Animator.SetFloat("Turn", _turnAmount, 0.1f, Time.deltaTime);
-            _character.Animator.SetBool("OnGround", _isGrounded);
-            if (_isGrounded && move.magnitude > 0)
+            if (move.magnitude > 0)
             {
                 _character.Animator.speed = AnimSpeedMultiplier;
             }
@@ -103,40 +103,11 @@ namespace Character
 
         public void OnAnimatorMove()
         {
-            if (_isGrounded && Time.deltaTime > 0)
+            if (Time.deltaTime > 0)
             {
                 Vector3 v = (_character.Animator.deltaPosition * MoveSpeedMultiplier) / Time.deltaTime;
                 v.y = _character.Rigidbody.velocity.y;
                 _character.Rigidbody.velocity = v;
-            }
-        }
-
-
-        void CheckGroundStatus()
-        {
-            RaycastHit hitInfo;
-            #if UNITY_EDITOR
-            Debug.DrawLine(
-                _character.Transform.position + (Vector3.up * 0.1f), 
-                _character.Transform.position + (Vector3.up * 0.1f) +
-                (Vector3.down * GroundCheckDistance));
-            #endif
-            if (Physics.Raycast(
-                    _character.Transform.position +
-                    (Vector3.up * 0.1f), 
-                    Vector3.down, 
-                    out hitInfo, 
-                    GroundCheckDistance))
-            {
-                _groundNormal = hitInfo.normal;
-                _isGrounded = true;
-                _character.Animator.applyRootMotion = true;
-            }
-            else
-            {
-                _isGrounded = false;
-                _groundNormal = Vector3.up;
-                _character.Animator.applyRootMotion = false;
             }
         }
 
