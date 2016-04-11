@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
 using Zenject;
 using System;
 
@@ -28,17 +27,18 @@ namespace Character
 		
         public override void FixedUpdate()
         {
+            if (_character.IsInState(VerticalStates.Jumping)) return;
+
             float h = Input.GetAxis("Horizontal");
             float v = Input.GetAxis("Vertical");
 
             bool hasH = h > MovementThreshold || h < -MovementThreshold;
             bool hasV = v > MovementThreshold || v < -MovementThreshold;
 
-            if (hasH || hasV)
-                _character.ChangeState(Trigger.MovePress);
-
             UpdateAnimator();
 
+            if (hasH || hasV)
+                _character.ChangeState(Trigger.MovePress);
         }
 
         void UpdateAnimator()

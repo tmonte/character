@@ -1,7 +1,4 @@
-﻿using UnityEngine;
-using System.Collections;
-
-namespace Character
+﻿namespace Character
 {
 	public enum VerticalStates
 	{
