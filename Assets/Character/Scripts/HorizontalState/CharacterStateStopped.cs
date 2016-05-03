@@ -4,13 +4,13 @@ using System;
 
 namespace Character
 {
-    public class CharacterStateIdle : HorizontalState
+    public class CharacterStateStopped : HorizontalState
 	{
 		Settings _settings;
 		Camera _camera;
         const float MovementThreshold = 0.00001f;
 		
-		public CharacterStateIdle(
+		public CharacterStateStopped(
 			Settings settings,
 			Character character,
 			[Inject("Main")] Camera camera

@@ -38,7 +38,7 @@
 		    Container.Bind<IInitializable>().ToSingle<Character>();
 		    
             // Character States Settings
-		    Container.Bind<CharacterStateIdle.Settings>()
+		    Container.Bind<CharacterStateStopped.Settings>()
 			    .ToSingleInstance(_settings.Character.StateIdle);
 		    Container.Bind<CharacterStateMoving.Settings>()
 			    .ToSingleInstance(_settings.Character.StateMoving);
@@ -55,7 +55,7 @@
         public class CharacterSettings
 	    {
 		    public CharacterStateMoving.Settings StateMoving;
-		    public CharacterStateIdle.Settings StateIdle;
+		    public CharacterStateStopped.Settings StateIdle;
             public GameObject Prefab;
         }
     }

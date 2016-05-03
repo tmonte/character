@@ -26,7 +26,7 @@ namespace Character
 			switch(State)
 			{
 				case HorizontalStates.Idle:
-					return _container.Instantiate<CharacterStateIdle>(constructorArgs);
+					return _container.Instantiate<CharacterStateStopped>(constructorArgs);
 				case  HorizontalStates.Moving:
 					return _container.Instantiate<CharacterStateMoving>(constructorArgs);
                 default:

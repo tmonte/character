@@ -1,7 +1,5 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 using Zenject;
-using Stateless;
 
 namespace Character
 {
