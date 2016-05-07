@@ -7,13 +7,13 @@ namespace Character
     {
         // Hooks to get Monobehaviour props
         CharacterHooks _hooks;
-		
+
         // State machines that handle state changes
         public HorizontalStateFactory _horizontalStateFactory;
         public VerticalStateFactory _verticalStateFactory;
         public EquipmentStateFactory _equipmentStateFactory;
         public SpeedStateFactory _speedStateFactory;
-		
+
         // Current character states
         HorizontalState _horizontalState;
         VerticalState _verticalState;
@@ -21,7 +21,7 @@ namespace Character
         SpeedState _speedState;
 
         public Character
-	    (
+        (
             CharacterHooks hooks,
             HorizontalStateFactory horizontalStateFactory,
             VerticalStateFactory verticalStateFactory,
@@ -34,9 +34,9 @@ namespace Character
             _verticalStateFactory = verticalStateFactory;
             _equipmentStateFactory = equipmentStateFactory;
             _speedStateFactory = speedStateFactory;
-            Rigidbody.constraints = 
-                RigidbodyConstraints.FreezeRotationX | 
-                RigidbodyConstraints.FreezeRotationY | 
+            Rigidbody.constraints =
+                RigidbodyConstraints.FreezeRotationX |
+                RigidbodyConstraints.FreezeRotationY |
                 RigidbodyConstraints.FreezeRotationZ;
         }
 
@@ -99,7 +99,7 @@ namespace Character
         public void Tick()
         {
             // Delegates the update to each state
-	    	
+
             _horizontalState.Update();
             _verticalState.Update();
             _equipmentState.Update();

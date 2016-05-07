@@ -26,14 +26,12 @@ namespace Character
         ) : base(character)
         {
             _originalGroundCheckDistance = _groundCheckDistance;
-            _character.Animator.applyRootMotion = true;
             _character.Rigidbody.velocity = new Vector3(
                 _character.Rigidbody.velocity.x,
                 _jumpPower,
                 _character.Rigidbody.velocity.z);
             _character.Animator.applyRootMotion = false;
             _groundCheckDistance = 0.1f;
-            _character.Animator.SetFloat("Jump", _character.Rigidbody.velocity.y);
             _character.Animator.SetBool("OnGround", false);
         }
 
@@ -53,7 +51,6 @@ namespace Character
                 out hitInfo,
                 GroundCheckDistance))
             {
-                _character.Animator.SetFloat("Jump", 0f);
                 _character.Animator.SetBool("OnGround", true);
                 _character.Animator.applyRootMotion = true;
                 _character.ChangeState(Trigger.JumpRelease);
@@ -63,6 +60,7 @@ namespace Character
                 Vector3 extraGravityForce = (Physics.gravity * _gravityMultiplier) - Physics.gravity;
                 _character.Rigidbody.AddForce(extraGravityForce);
                 _groundCheckDistance = _character.Rigidbody.velocity.y < 0 ? _originalGroundCheckDistance : 0.01f;
+                _character.Animator.SetFloat("Jump", _character.Rigidbody.velocity.y);
             }
         }
     }

@@ -1,8 +1,7 @@
 ﻿namespace Character
 {
-    using System;
-    using Stateless;
     using Zenject;
+    using Stateless;
 
     /// <summary>
     /// Character equipment state.

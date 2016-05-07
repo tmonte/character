@@ -1,6 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
-using Stateless;
 using Zenject;
 
 namespace Character

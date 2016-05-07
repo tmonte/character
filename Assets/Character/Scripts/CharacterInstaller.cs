@@ -3,7 +3,6 @@
     using System;
     using UnityEngine;
 	using Zenject;
-	using Stateless;
 
     public enum Cameras
     {

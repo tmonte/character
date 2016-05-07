@@ -17,6 +17,8 @@ namespace Character
         float MoveSpeedMultiplier = 1f;
         [SerializeField]
         float AnimSpeedMultiplier = 1f;
+        [SerializeField]
+        float m_RunCycleLegOffset = 0.2f; //specific to the character in sample assets, will need to be modified to work with others
 
         Settings _settings;
         Camera _camera;
@@ -85,6 +87,13 @@ namespace Character
         {
             _character.Animator.SetFloat("Forward", _forwardAmount, 0.1f, Time.deltaTime);
             _character.Animator.SetFloat("Turn", _turnAmount, 0.1f, Time.deltaTime);
+
+            float runCycle =
+                Mathf.Repeat(
+                    _character.Animator.GetCurrentAnimatorStateInfo(0).normalizedTime + m_RunCycleLegOffset, 1);
+            float jumpLeg = (runCycle < 0.5f ? 1 : -1) * _forwardAmount;
+            if(!_character.IsInState(VerticalStates.Jumping))
+                _character.Animator.SetFloat("JumpLeg", jumpLeg);
             if (move.magnitude > 0)
             {
                 _character.Animator.speed = AnimSpeedMultiplier;
