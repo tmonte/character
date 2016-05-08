@@ -6,14 +6,14 @@ namespace Character
     {
         public void Start(Character character) {}
 
-        public void FixedUpdate(Character character) 
+        public void FixedUpdate(Character character) {}
+
+        public void Update(Character character) 
         {
-            if(Input.GetKey(KeyCode.Tab))
+            if (Input.GetKeyUp(KeyCode.Tab))
             {
                 character.ChangeState(Trigger.SpeedToggle);
             }
         }
-
-        public void Update(Character character) {}
     }
 }

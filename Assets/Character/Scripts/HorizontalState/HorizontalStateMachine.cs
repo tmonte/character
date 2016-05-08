@@ -19,11 +19,11 @@ namespace Character
             _characterStateMoving = characterStateMoving;
 
             Configure(HorizontalStates.Idle)
-				.OnEntry(() => Debug.Log("IDLE"))
+				//.OnEntry(() => Debug.Log("IDLE"))
 				.Permit(Trigger.MovePress, HorizontalStates.Moving);
 			
             Configure(HorizontalStates.Moving)
-				.OnEntry(() => Debug.Log("MOVING"))
+				//.OnEntry(() => Debug.Log("MOVING"))
 				.Permit(Trigger.MoveRelease, HorizontalStates.Idle);     
         }
 

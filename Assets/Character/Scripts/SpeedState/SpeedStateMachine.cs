@@ -19,11 +19,11 @@
             _characterStateFast = characterStateFast;
 
             Configure(SpeedStates.Slow)
-                .OnEntry(() => Debug.Log("SLOW"))
+                //.OnEntry(() => Debug.Log("SLOW"))
                 .Permit(Trigger.SpeedToggle, SpeedStates.Fast);
 
             Configure(SpeedStates.Fast)
-                .OnEntry(() => Debug.Log("FAST"))
+                //.OnEntry(() => Debug.Log("FAST"))
                 .Permit(Trigger.SpeedToggle, SpeedStates.Slow);
         }
 
