@@ -5,19 +5,26 @@ namespace Character
 {
     public class VerticalStateStanding : VerticalState
     {
+        bool _jump = false;
+
         public void Update(Character character)
         {
             if(Input.GetButtonDown("Jump"))
             {
-                character.ChangeState(Trigger.JumpPress);
+                _jump = true;
             }
-            if (Input.GetKey("c"))
+            if (Input.GetKeyUp("c"))
             {
                 character.ChangeState(Trigger.DuckToggle);
             }
         }
 
-        public void FixedUpdate(Character character) {}
+        public void FixedUpdate(Character character) 
+        {
+            if (_jump)
+                character.ChangeState(Trigger.JumpPress);
+            _jump = false;
+        }
 
         public void Start(Character character) {}
     }

@@ -9,15 +9,15 @@ namespace Character
 
         public void Start(Character character)
         {
-            character.Animator.SetBool("Crouch", true);
             Height = character.CapsuleCollider.height;
             Center = character.CapsuleCollider.center;
             ScaleCapsuleForCrouching(character, true);
+            character.Animator.SetBool("Crouch", true);
         }
 
         public void Update(Character character)
         {
-            if (Input.GetKey("c"))
+            if (Input.GetKeyUp("c"))
             {
                 character.Animator.SetBool("Crouch", false);
                 ScaleCapsuleForCrouching(character, false);

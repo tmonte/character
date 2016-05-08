@@ -25,17 +25,17 @@ namespace Character
             _characterStateJumping = characterStateJumping;
 
             Configure(VerticalStates.Standing)
-				.OnEntry(() => Debug.Log("STANDING"))
+				//.OnEntry(() => Debug.Log("STANDING"))
                 .Permit(Trigger.DuckToggle, VerticalStates.Ducking)
                 .Permit(Trigger.JumpPress, VerticalStates.Jumping);
 
             Configure(VerticalStates.Jumping)
-				.OnEntry(() => Debug.Log("JUMPING"))
+				//.OnEntry(() => Debug.Log("JUMPING"))
                 .SubstateOf(VerticalStates.Standing)
                 .Permit(Trigger.JumpRelease, VerticalStates.Standing);
 
             Configure(VerticalStates.Ducking)
-				.OnEntry(() => Debug.Log("DUCKING"))
+				//.OnEntry(() => Debug.Log("DUCKING"))
                 .Permit(Trigger.DuckToggle, VerticalStates.Standing);
         }
 
