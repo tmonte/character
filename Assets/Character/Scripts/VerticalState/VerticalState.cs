@@ -7,23 +7,12 @@
 		Jumping
 	}
 	
-	public abstract class VerticalState 
+	public interface VerticalState 
 	{
-        protected Character _character;
+        void Start(Character character);
 
-        public VerticalState(Character character)
-        {
-            _character = character;
-        }
+        void Update(Character character);
 
-        public abstract void Update();
-
-        public virtual void Start()
-        {
-        }
-
-        public virtual void Stop()
-        {
-        }
+        void FixedUpdate(Character character);
     }
 }

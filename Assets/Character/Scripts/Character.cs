@@ -5,35 +5,32 @@ namespace Character
 {
     public class Character : ITickable, IFixedTickable, IInitializable
     {
-        // Hooks to get Monobehaviour props
         CharacterHooks _hooks;
 
-        // State machines that handle state changes
-        public HorizontalStateFactory _horizontalStateFactory;
-        public VerticalStateFactory _verticalStateFactory;
-        public EquipmentStateFactory _equipmentStateFactory;
-        public SpeedStateFactory _speedStateFactory;
+        public HorizontalStateMachine _horizontalStateMachine;
+        public VerticalStateMachine _verticalStateMachine;
+        //public EquipmentStateFactory _equipmentStateFactory;
+        public SpeedStateMachine _speedStateMachine;
 
-        // Current character states
         HorizontalState _horizontalState;
         VerticalState _verticalState;
-        EquipmentState _equipmentState;
+        //EquipmentState _equipmentState;
         SpeedState _speedState;
 
         public Character
         (
             CharacterHooks hooks,
-            HorizontalStateFactory horizontalStateFactory,
-            VerticalStateFactory verticalStateFactory,
-            EquipmentStateFactory equipmentStateFactory,
-            SpeedStateFactory speedStateFactory
+            HorizontalStateMachine horizontalStateMachine,
+            VerticalStateMachine verticalStateFactory,
+            //EquipmentStateFactory equipmentStateFactory,
+            SpeedStateMachine speedStateFactory
         )
         {
             _hooks = hooks;
-            _horizontalStateFactory = horizontalStateFactory;
-            _verticalStateFactory = verticalStateFactory;
-            _equipmentStateFactory = equipmentStateFactory;
-            _speedStateFactory = speedStateFactory;
+            _horizontalStateMachine = horizontalStateMachine;
+            _verticalStateMachine = verticalStateFactory;
+            //_equipmentStateFactory = equipmentStateFactory;
+            _speedStateMachine = speedStateFactory;
             Rigidbody.constraints =
                 RigidbodyConstraints.FreezeRotationX |
                 RigidbodyConstraints.FreezeRotationY |
@@ -98,66 +95,52 @@ namespace Character
 
         public void Tick()
         {
-            // Delegates the update to each state
-
-            _horizontalState.Update();
-            _verticalState.Update();
-            _equipmentState.Update();
-            _speedState.Update();
+            _horizontalState.Update(this);
+            _verticalState.Update(this);
+            _speedState.Update(this);
         }
 
         public void FixedTick()
         {
-            // Delegates the fixed update to each state
-
-            _horizontalState.FixedUpdate();
+            _horizontalState.FixedUpdate(this);
+            _verticalState.FixedUpdate(this);
+            _speedState.FixedUpdate(this);
         }
-
+            
         public void Initialize()
         {
-            // Initialize all state machines
-
             UpdateState();
         }
 
-        /// <summary>
-        /// Sets the character states to his state machines
-        /// current state
-        /// </summary>
         public void UpdateState()
         {
-            _horizontalState = _horizontalStateFactory.Create(this);
-            _verticalState = _verticalStateFactory.Create(this);
-            _equipmentState = _equipmentStateFactory.Create(this);
-            _speedState = _speedStateFactory.Create(this);
+            _horizontalState = _horizontalStateMachine.GetCurrentState(this);
+            _verticalState = _verticalStateMachine.GetCurrentState(this);
+            _speedState = _speedStateMachine.GetCurrentState(this);
         }
 
-        /// <summary>
-        /// Changes the the character based on a trigger
-        /// </summary>
-        /// <param name="trigger">A trigger, or input command</param>
         public void ChangeState(Trigger trigger)
         {
-            if (_horizontalStateFactory.CanFire(trigger))
-                _horizontalStateFactory.Fire(trigger);
-            if (_verticalStateFactory.CanFire(trigger))
-                _verticalStateFactory.Fire(trigger);
-            if (_equipmentStateFactory.CanFire(trigger))
-                _equipmentStateFactory.Fire(trigger);
-            if (_speedStateFactory.CanFire(trigger))
-                _speedStateFactory.Fire(trigger);
+            if (_horizontalStateMachine.CanFire(trigger))
+                _horizontalStateMachine.Fire(trigger);
+            if (_verticalStateMachine.CanFire(trigger))
+                _verticalStateMachine.Fire(trigger);
+//            if (_equipmentStateFactory.CanFire(trigger))
+//                _equipmentStateFactory.Fire(trigger);
+            if (_speedStateMachine.CanFire(trigger))
+                _speedStateMachine.Fire(trigger);
 
             UpdateState();
         }
 
         public bool IsInState(SpeedStates state)
         {
-            return _speedStateFactory.IsInState(state);
+            return _speedStateMachine.IsInState(state);
         }
 
         public bool IsInState(VerticalStates state)
         {
-            return _verticalStateFactory.IsInState(state);
+            return _verticalStateMachine.IsInState(state);
         }
     }
 }

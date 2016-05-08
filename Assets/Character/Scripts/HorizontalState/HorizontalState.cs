@@ -3,32 +3,18 @@ using System.Collections;
 
 namespace Character
 {
-	public enum HorizontalStates 
+	public enum HorizontalStates
 	{
 		Idle,
 		Moving
 	}
 	
-	public abstract class HorizontalState 
-	{
-		protected Character _character;
-		
-		public HorizontalState(Character character)
-		{
-			_character = character;
-		}
-		
-		public abstract void Update();
+	public interface HorizontalState
+	{		
+        void Update(Character character);
 
-        public abstract void FixedUpdate();
-		
-		public virtual void Start()
-		{
-		}
-		
-		public virtual void Stop()
-		{
-		}		
+        void FixedUpdate(Character character);
+
+        void Start(Character character);
 	}
-	
 }
